@@ -31,6 +31,7 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('success-section').classList.add('hidden');
     document.getElementById('oob-container').classList.add('hidden');
               document.getElementById('oob-failed').classList.add('hidden');
+              document.getElementById('riskscore-info').classList.add('hidden');
 
   }
   window.getOSName = function () {
@@ -52,9 +53,11 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('shopSection').classList.add('hidden');
     document.getElementById('paymentSection').classList.remove('hidden');
     document.getElementById('device-info').classList.remove('hidden');
+    document.getElementById('riskscore-info').classList.remove('hidden');
     document.getElementById('otpSection').classList.add('hidden');
     document.getElementById('success-section').classList.add('hidden');
     document.getElementById('oob-container').classList.add('hidden');
+
               document.getElementById('oob-failed').classList.add('hidden');
               setTimeout(()=>{
                 hideLoader()
@@ -202,6 +205,8 @@ window.hideLoader = function () {
   document.getElementById('success-section').classList.add('hidden');
   document.getElementById('oob-container').classList.add('hidden');
             document.getElementById('oob-failed').classList.add('hidden');
+                          document.getElementById('riskscore-info').classList.add('hidden');
+
 
   resetPaymentForm();
 
@@ -246,6 +251,8 @@ window.resetPaymentForm = function () {
     document.getElementById('success-section').classList.add('hidden');
     document.getElementById('oob-container').classList.add('hidden');
               document.getElementById('oob-failed').classList.add('hidden');
+                            document.getElementById('riskscore-info').classList.add('hidden');
+
 
   }
   window.goBack = function () {
@@ -256,6 +263,8 @@ window.resetPaymentForm = function () {
     document.getElementById('otpSection').classList.add('hidden');
     document.getElementById('success-section').classList.add('hidden');
     document.getElementById('oob-container').classList.add('hidden');
+                  document.getElementById('riskscore-info').classList.add('hidden');
+
               document.getElementById('oob-failed').classList.add('hidden');
 
   }
@@ -338,6 +347,8 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
           document.getElementById('shopSection').classList.add('hidden');
           document.getElementById('paymentSection').classList.add('hidden');
               document.getElementById('device-info').classList.add('hidden');
+                            document.getElementById('riskscore-info').classList.add('hidden');
+
           document.getElementById('otpSection').classList.add('hidden');
           document.getElementById('success-section').classList.remove('hidden');
           document.getElementById('oob-container').classList.add('hidden');
@@ -352,6 +363,8 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
           document.getElementById('shopSection').classList.add('hidden');
           document.getElementById('paymentSection').classList.add('hidden');
               document.getElementById('device-info').classList.add('hidden');
+                            document.getElementById('riskscore-info').classList.add('hidden');
+
           document.getElementById('otpSection').classList.remove('hidden');
           document.getElementById('success-section').classList.add('hidden');
           document.getElementById('oob-container').classList.add('hidden');
@@ -365,6 +378,8 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
           document.getElementById('shopSection').classList.add('hidden');
           document.getElementById('paymentSection').classList.add('hidden');
               document.getElementById('device-info').classList.add('hidden');
+                            document.getElementById('riskscore-info').classList.add('hidden');
+
           document.getElementById('otpSection').classList.add('hidden');
           document.getElementById('success-section').classList.add('hidden');
           document.getElementById('oob-container').classList.remove('hidden');
@@ -383,6 +398,8 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
                 document.getElementById('storeSelectionPage').classList.add('hidden')
           document.getElementById('shopSection').classList.add('hidden');
               document.getElementById('device-info').classList.add('hidden');
+                            document.getElementById('riskscore-info').classList.add('hidden');
+
           document.getElementById('paymentSection').classList.add('hidden');
           document.getElementById('otpSection').classList.add('hidden');
           document.getElementById('success-section').classList.add('hidden');
@@ -422,6 +439,8 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
           document.getElementById('shopSection').classList.add('hidden');
           document.getElementById('paymentSection').classList.add('hidden');
               document.getElementById('device-info').classList.add('hidden');
+                            document.getElementById('riskscore-info').classList.add('hidden');
+
           document.getElementById('otpSection').classList.add('hidden');
           document.getElementById('success-section').classList.remove('hidden');
           document.getElementById('oob-container').classList.add('hidden');
@@ -488,6 +507,8 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
           document.getElementById('shopSection').classList.add('hidden');
           document.getElementById('paymentSection').classList.add('hidden');
               document.getElementById('device-info').classList.add('hidden');
+                            document.getElementById('riskscore-info').classList.add('hidden');
+
           document.getElementById('otpSection').classList.add('hidden');
           document.getElementById('success-section').classList.remove('hidden');
           document.getElementById('oob-container').classList.add('hidden');
@@ -516,6 +537,8 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
                 document.getElementById('shopSection').classList.add('hidden');
                 document.getElementById('paymentSection').classList.add('hidden');
                     document.getElementById('device-info').classList.add('hidden');
+                                  document.getElementById('riskscore-info').classList.add('hidden');
+
                 document.getElementById('otpSection').classList.add('hidden');
                 document.getElementById('success-section').classList.add('hidden');
                 document.getElementById('oob-container').classList.remove('hidden');
