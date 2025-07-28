@@ -493,8 +493,11 @@
   </div>
 
   <!-- 💳 PAYMENT SECTION -->
-   <div style="display: flex; justify-content: space-around;">
-  <div id="paymentSection" class="hidden container">
+   <div style="    display: flex
+;
+    flex-direction: row;
+    justify-content: center; gap: 40px;" >
+  <div id="paymentSection" class="hidden ">
     <h1 style="text-align:center;">💳 Payment Options</h1>
     <div class="nav" style="text-align:center;margin-bottom:20px;">
       <button class="button" onclick="goBack()">← Back to Products</button>
@@ -547,17 +550,14 @@
       <p>© 2025 Shop Products. All rights reserved.</p>
     </div>
   </div>
+  <div >
   <div id="device-info" class="hidden container" style="    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    margin-top:140px; margin-bottom:240px;
+    margin-top:140px; height: 350px;
     background: white;width: 100%;">
     <div class="section">
   <h3>Detected Signals</h3>
-  <div class="sign-header">
-    <div class="label">Risk score</div>
-    <div class="value" id="riskscore">Loading...</div>
-  </div>
 
   <div class="sign-header">
     <div class="label">Geo Location:</div>
@@ -604,6 +604,16 @@
     <span id="incognitoStatus" class="tag">Loading...</span>
   </div>
 </div>
+</div>
+<div id="riskscore-info" class="hidden container" style="    padding: 20px;
+    border-radius: 8px;margin-top: 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: white;width: 100%;">
+ <div class="sign-header" >
+    <div class="label">Risk score</div>
+    <div class="value" id="riskscore">Loading...</div>
+  </div>
+  </div>
 
   </div>
   </div>
@@ -672,9 +682,9 @@
     <div id="oob-failed" class="hidden container">
       <div class="message"  style="  color: #f11414;
 ">
-        Authentication Failed. Please try again
+        ❌ Authentication Failed. Please try again
       </div>
-      <div style="display: flex; justify-content: space-flex-end; gap:30px">
+      <div style="display: flex; justify-content: flex-end; gap:30px">
         <button onclick="goToPayment()"  style="
     margin-top: 20px;
     padding: 10px 20px;
