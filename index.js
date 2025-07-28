@@ -26,9 +26,12 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('storeSelectionPage').classList.add('hidden')
     document.getElementById('shopSection').classList.remove('hidden');
     document.getElementById('paymentSection').classList.add('hidden');
+    document.getElementById('device-info').classList.add('hidden');
     document.getElementById('otpSection').classList.add('hidden');
     document.getElementById('success-section').classList.add('hidden');
     document.getElementById('oob-container').classList.add('hidden');
+              document.getElementById('oob-failed').classList.add('hidden');
+
   }
   window.getOSName = function () {
     const platform = navigator.platform.toLowerCase();
@@ -44,13 +47,20 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   window.goToPayment = function (item, price) {
-   showLoader();
+    showLoader();
     document.getElementById('storeSelectionPage').classList.add('hidden')
     document.getElementById('shopSection').classList.add('hidden');
     document.getElementById('paymentSection').classList.remove('hidden');
+    document.getElementById('device-info').classList.remove('hidden');
     document.getElementById('otpSection').classList.add('hidden');
     document.getElementById('success-section').classList.add('hidden');
     document.getElementById('oob-container').classList.add('hidden');
+              document.getElementById('oob-failed').classList.add('hidden');
+              setTimeout(()=>{
+                hideLoader()
+              },500)
+              
+
     selectedItem = item;
     selectedPrice = price;
     totalAmount = parseFloat((price * 1.1).toFixed(2));
@@ -73,27 +83,109 @@ window.addEventListener('DOMContentLoaded', () => {
         })
           .then(result => result.get())
           .then(data => {
-            hideLoader();
             deviceInfo = data;
+             const ipData = deviceInfo.ipIntelligence || {};
+        const browserData = deviceInfo.browserDetections || {};
+
+        const isVPN = ipData.isVPN;
+        const isTor = ipData.isTor;
+        const isIncognito = browserData.isIncognito;
+
+        // ✅ Check if any of these values are missing (undefined or null)
+        const missingCriticalValues = [isVPN, isTor, isIncognito].some(v => v === undefined || v === null);
+        const rawRiskScore = missingCriticalValues ? 'high' : deviceInfo.riskScore;
+        setRiskScore(rawRiskScore)
             deviceInfo.riskScore = mapRiskScore(data.riskScore);
+            // setRiskScore(data.riskScore);
+             if (deviceInfo.ipIntelligence) {
+    const city = deviceInfo.ipIntelligence.city || 'Unknown City';
+    const region = deviceInfo.ipIntelligence.region || 'Unknown Region';
+    const country = deviceInfo.ipIntelligence.country || 'Unknown Country';
+
+    document.getElementById('geoLocation').textContent = `${city}, ${region}, ${country}`;
+
+    // Optional detections
+    updateTag("vpnStatus", deviceInfo.ipIntelligence.isVPN, "Detected", "Not Detected");
+    updateTag("proxyStatus", deviceInfo.ipIntelligence.isProxy, "Detected", "Not Detected");
+    updateTag("torStatus", deviceInfo.ipIntelligence.isTor, "Detected", "Not Detected", true);
+  }
+
+  if (deviceInfo.browserDetections) {
+    updateTag("botStatus", deviceInfo.browserDetections.isBotDetected, "Detected", "Not Detected");
+    updateTag("adBlockerStatus", deviceInfo.browserDetections.isAdBlockerEnabled, "Detected", "Not Detected");
+    updateTag("devToolsStatus", deviceInfo.browserDetections.isDevToolsOpen, "Detected", "Not Detected");
+    updateTag("incognitoStatus", deviceInfo.browserDetections.isIncognito, "Detected", "Not Detected", true);
+  }
           })
           .catch(err => {
-           hideLoader();
+             hideLoader();
             console.error("SDK Error:", err);
             // alert("SDK failed: " + err.message);
           });
       } else {
-        hideLoader();
         console.warn("SDK not ready, retrying...");
         setTimeout(tryInitialize, 200); // retry after 200ms
       }
     };
     setTimeout(() => {
       tryInitialize();
-     hideLoader();
+       hideLoader();
     }, 500);
 
+
   }
+window.setRiskScore = function (scoreLabel) {
+  const el = document.getElementById('riskscore');
+
+  let className = '';
+  switch (scoreLabel.toLowerCase()) {
+    case 'low':
+      className = 'tag success';
+      break;
+    case 'medium':
+      className = 'tag warning';
+      break;
+    case 'high':
+      className = 'tag danger';
+      break;
+    default:
+      className = 'tag';
+  }
+
+  el.className = className;
+  el.textContent = scoreLabel.charAt(0).toUpperCase() + scoreLabel.slice(1);
+};
+
+   window.updateTag =function (id, condition, detectedText, notDetectedText, danger = false){
+  const el = document.getElementById(id);
+  el.textContent = condition ? detectedText : notDetectedText;
+  el.className = `tag ${condition ? (danger ? 'danger' : 'warning') : 'success'}`;
+ }
+//  window.setRiskScore = function (score){
+//    const el = document.getElementById('riskscore');
+//   if (!el) return;
+
+//   const value = score.toLowerCase();
+//   let className = '';
+
+//   switch (value) {
+//     case 'low':
+//       className = 'success';
+//       break;
+//     case 'medium':
+//       className = 'warning';
+//       break;
+//     case 'high':
+//       className = 'danger';
+//       break;
+//     default:
+//       className = '';
+//   }
+
+//   el.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+//   el.className = `tag ${className}`;
+//  }
+
   window.showLoader = function () {
   document.getElementById('loader').classList.remove('hidden');
 };
@@ -102,13 +194,17 @@ window.hideLoader = function () {
   document.getElementById('loader').classList.add('hidden');
 };
   window.continueShopping = function () {
-   resetPaymentForm();
   document.getElementById('storeSelectionPage').classList.remove('hidden');
   document.getElementById('shopSection').classList.add('hidden');
   document.getElementById('paymentSection').classList.add('hidden');
+      document.getElementById('device-info').classList.add('hidden');
   document.getElementById('otpSection').classList.add('hidden');
   document.getElementById('success-section').classList.add('hidden');
   document.getElementById('oob-container').classList.add('hidden');
+            document.getElementById('oob-failed').classList.add('hidden');
+
+  resetPaymentForm();
+
 
   // Optionally reset cart variables
   selectedItem = '';
@@ -121,13 +217,15 @@ window.hideLoader = function () {
   if (paidAmountEl) paidAmountEl.textContent = '$0.00';
 };
 
- window.resetPaymentForm = function () {
+window.resetPaymentForm = function () {
   const inputs = ['cardNumber', 'expiryDate', 'cvv', 'cardName', 'otpInput'];
   inputs.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
 };
+
+
   window.mapRiskScore = function (score) {
     if (typeof score === 'string') {
       switch (score.toLowerCase()) {
@@ -143,18 +241,25 @@ window.hideLoader = function () {
     document.getElementById('storeSelectionPage').classList.remove('hidden')
     document.getElementById('shopSection').classList.add('hidden');
     document.getElementById('paymentSection').classList.add('hidden');
+        document.getElementById('device-info').classList.add('hidden');
     document.getElementById('otpSection').classList.add('hidden');
     document.getElementById('success-section').classList.add('hidden');
     document.getElementById('oob-container').classList.add('hidden');
+              document.getElementById('oob-failed').classList.add('hidden');
+
   }
   window.goBack = function () {
     document.getElementById('storeSelectionPage').classList.add('hidden')
     document.getElementById('shopSection').classList.remove('hidden');
     document.getElementById('paymentSection').classList.add('hidden');
+        document.getElementById('device-info').classList.add('hidden');
     document.getElementById('otpSection').classList.add('hidden');
     document.getElementById('success-section').classList.add('hidden');
     document.getElementById('oob-container').classList.add('hidden');
+              document.getElementById('oob-failed').classList.add('hidden');
+
   }
+
   //     window.validateCard = function (){
   //       const cardNumber = document.getElementById('cardNumber').value.trim();
   //       const expiryDate = document.getElementById('expiryDate').value.trim();
@@ -175,12 +280,11 @@ window.hideLoader = function () {
   //     document.getElementById(id).addEventListener('input', validateCardForm);
   //   });
   // });
-  window.initiatePayment = function () {
-    showToast('Payment initiated successfully!', 'success');
-     showLoader();
+    window.initiatePayment = function () {
     const totalAmountText = document.getElementById('totalAmount')?.textContent || "$0.00";
 const amountMatch = totalAmountText.match(/[\d.]+/);
 totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
+
     const cardNumber = document.getElementById('cardNumber').value;
     const payload = {
       "channelId": "01",
@@ -207,7 +311,7 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
         "isTor": deviceInfo.ipIntelligence.isTor,
         "internetProvider": "Not Resolved",
         "botDetected": deviceInfo.browserDetections.isBotDetected,
-        "riskScore": 65
+        "riskScore": deviceInfo.riskScore
       }
 
     };
@@ -222,39 +326,49 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
       body: JSON.stringify(payload)
     }).then(res => res.json())
       .then(response => {
-        hideLoader();
+         hideLoader();
         tranId = response.tranId;
         authType = response.authType;
         if (response.status === 'RN') {
           showToast('Declined transaction done by ruleEngine', 'error')
         }
         else if (response.status === 'RY') {
+           showToast('Payment initiated successfully!', 'success');
           document.getElementById('storeSelectionPage').classList.add('hidden')
           document.getElementById('shopSection').classList.add('hidden');
           document.getElementById('paymentSection').classList.add('hidden');
+              document.getElementById('device-info').classList.add('hidden');
           document.getElementById('otpSection').classList.add('hidden');
           document.getElementById('success-section').classList.remove('hidden');
           document.getElementById('oob-container').classList.add('hidden');
+                    document.getElementById('oob-failed').classList.add('hidden');
+
           document.getElementById('paidAmount').textContent = '$' + totalAmount;
           showToast('Authentication successful!', 'success');
-         resetPaymentForm();
         }
         else if (response.status === 'AR' && response.authType === 'OTP') {
+           showToast('Payment initiated successfully!', 'success');
           document.getElementById('storeSelectionPage').classList.add('hidden')
           document.getElementById('shopSection').classList.add('hidden');
           document.getElementById('paymentSection').classList.add('hidden');
+              document.getElementById('device-info').classList.add('hidden');
           document.getElementById('otpSection').classList.remove('hidden');
           document.getElementById('success-section').classList.add('hidden');
           document.getElementById('oob-container').classList.add('hidden');
+                    document.getElementById('oob-failed').classList.add('hidden');
+
           showToast('OTP sent successfully!', 'info');
         }
         else if (response.status === 'AR' && response.authType === 'OOB') {
+           showToast('Payment initiated successfully!', 'success');
           document.getElementById('storeSelectionPage').classList.add('hidden')
           document.getElementById('shopSection').classList.add('hidden');
           document.getElementById('paymentSection').classList.add('hidden');
+              document.getElementById('device-info').classList.add('hidden');
           document.getElementById('otpSection').classList.add('hidden');
           document.getElementById('success-section').classList.add('hidden');
           document.getElementById('oob-container').classList.remove('hidden');
+          document.getElementById('oob-failed').classList.add('hidden');
           let oobAttempts = 0;
           let oobInterval = setInterval(() => {
             oobAttempts++;
@@ -264,15 +378,24 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
                 clearInterval(oobInterval); // Stop retrying on success
               } else if (oobAttempts >= 3) {
                 clearInterval(oobInterval); // Stop after 3 attempts
-                showToast('Authentication failed after 3 attempts.', 'error');
+                // showToast('Authentication failed after 3 attempts.', 'error');
+                document.getElementById('oob-failed').classList.remove('hidden');
+                document.getElementById('storeSelectionPage').classList.add('hidden')
+          document.getElementById('shopSection').classList.add('hidden');
+              document.getElementById('device-info').classList.add('hidden');
+          document.getElementById('paymentSection').classList.add('hidden');
+          document.getElementById('otpSection').classList.add('hidden');
+          document.getElementById('success-section').classList.add('hidden');
+          document.getElementById('oob-container').classList.add('hidden');
+          
               }
             });
 
-          }, 15000);
+          }, 5000);
 
         }
       }).catch(err => {
-       hideLoader();
+         hideLoader();
         console.error("API ERRPR", err)
       })
 
@@ -298,12 +421,13 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
           document.getElementById('storeSelectionPage').classList.add('hidden')
           document.getElementById('shopSection').classList.add('hidden');
           document.getElementById('paymentSection').classList.add('hidden');
+              document.getElementById('device-info').classList.add('hidden');
           document.getElementById('otpSection').classList.add('hidden');
           document.getElementById('success-section').classList.remove('hidden');
           document.getElementById('oob-container').classList.add('hidden');
           document.getElementById('paidAmount').textContent = '$' + totalAmount;
           showToast('Authentication successful!', 'success');
-         resetPaymentForm();
+          resetPaymentForm();
           resolve(true); // ✅ resolve success
         } else {
           // showToast(res.message, 'error');
@@ -340,7 +464,7 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
       })
   }
   window.submitOtp = function () {
-   showLoader();
+     showLoader();
     const token = document.getElementById('otpInput').value;
     const otpApiUrl = 'https://frm-demo.appsteer.io/services/mobile/external/triggerAPI/a91de6d5-94ca-4241-829e-386085d776ed';
     const otpPayload = {
@@ -357,18 +481,19 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
       body: JSON.stringify(otpPayload)
     }).then(res => res.json())
       .then(response => {
-        hideLoader();
+         hideLoader();
         if (response.message === 'Authentication success') {
-         resetPaymentForm();
           // document.getElementById('paidAmount').textContent = '$' + totalAmount;
           document.getElementById('storeSelectionPage').classList.add('hidden')
           document.getElementById('shopSection').classList.add('hidden');
           document.getElementById('paymentSection').classList.add('hidden');
+              document.getElementById('device-info').classList.add('hidden');
           document.getElementById('otpSection').classList.add('hidden');
           document.getElementById('success-section').classList.remove('hidden');
           document.getElementById('oob-container').classList.add('hidden');
           document.getElementById('paidAmount').textContent = '$' + totalAmount;
           showToast('Authentication successful!', 'success');
+          resetPaymentForm();
         }
         else if (response.status === 'SAR' && response.stepupAuthType === 'OOB') {
           const stepupOobPayload = {
@@ -390,9 +515,12 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
                 document.getElementById('storeSelectionPage').classList.add('hidden')
                 document.getElementById('shopSection').classList.add('hidden');
                 document.getElementById('paymentSection').classList.add('hidden');
+                    document.getElementById('device-info').classList.add('hidden');
                 document.getElementById('otpSection').classList.add('hidden');
                 document.getElementById('success-section').classList.add('hidden');
                 document.getElementById('oob-container').classList.remove('hidden');
+                          document.getElementById('oob-failed').classList.add('hidden');
+
 
                 let oobAttempts = 0;
                 let oobInterval = setInterval(() => {
@@ -409,19 +537,17 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
 
                 }, 5000);
               } else {
-                hideLoader();
                 showToast('Step-up OOB initiation failed.', 'error');
               }
             })
             .catch(err => {
-              hideLoader();
+               hideLoader();
               console.error('Step-up OOB Error:', err);
               showToast('Step-up OOB request failed.', 'error');
             });
 
         }
         else {
-          hideLoader();
           showToast(response.message, 'error');
         }
       })
@@ -476,7 +602,7 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
     font-family: sans-serif;
     font-size: 14px;
     background-color: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8'};
-    animation: slidein 0.3s ease, fadeout 0.5s ease 2.5s;
+    animation: slidein 0.3s ease, fadeout 0.5s ease 4.5s;
     opacity: 1;
   `;
 
