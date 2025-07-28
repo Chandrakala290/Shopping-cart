@@ -44,6 +44,7 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   window.goToPayment = function (item, price) {
+   showLoader();
     document.getElementById('storeSelectionPage').classList.add('hidden')
     document.getElementById('shopSection').classList.add('hidden');
     document.getElementById('paymentSection').classList.remove('hidden');
@@ -72,23 +73,34 @@ window.addEventListener('DOMContentLoaded', () => {
         })
           .then(result => result.get())
           .then(data => {
+            hideLoader();
             deviceInfo = data;
             deviceInfo.riskScore = mapRiskScore(data.riskScore);
           })
           .catch(err => {
+           hideLoader();
             console.error("SDK Error:", err);
             // alert("SDK failed: " + err.message);
           });
       } else {
+        hideLoader();
         console.warn("SDK not ready, retrying...");
         setTimeout(tryInitialize, 200); // retry after 200ms
       }
     };
     setTimeout(() => {
       tryInitialize();
+     hideLoader();
     }, 500);
 
   }
+  window.showLoader = function () {
+  document.getElementById('loader').classList.remove('hidden');
+};
+
+window.hideLoader = function () {
+  document.getElementById('loader').classList.add('hidden');
+};
   window.continueShopping = function () {
    resetPaymentForm();
   document.getElementById('storeSelectionPage').classList.remove('hidden');
@@ -165,8 +177,10 @@ window.addEventListener('DOMContentLoaded', () => {
   // });
   window.initiatePayment = function () {
     showToast('Payment initiated successfully!', 'success');
-    const totalAmountText = document.getElementById('totalAmount').textContent;
-    const totalAmount = parseFloat(totalAmountText.replace('$', ''));
+     showLoader();
+    const totalAmountText = document.getElementById('totalAmount')?.textContent || "$0.00";
+const amountMatch = totalAmountText.match(/[\d.]+/);
+totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
     const cardNumber = document.getElementById('cardNumber').value;
     const payload = {
       "channelId": "01",
@@ -208,6 +222,7 @@ window.addEventListener('DOMContentLoaded', () => {
       body: JSON.stringify(payload)
     }).then(res => res.json())
       .then(response => {
+        hideLoader();
         tranId = response.tranId;
         authType = response.authType;
         if (response.status === 'RN') {
@@ -257,6 +272,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         }
       }).catch(err => {
+       hideLoader();
         console.error("API ERRPR", err)
       })
 
@@ -324,6 +340,7 @@ window.addEventListener('DOMContentLoaded', () => {
       })
   }
   window.submitOtp = function () {
+   showLoader();
     const token = document.getElementById('otpInput').value;
     const otpApiUrl = 'https://frm-demo.appsteer.io/services/mobile/external/triggerAPI/a91de6d5-94ca-4241-829e-386085d776ed';
     const otpPayload = {
@@ -340,6 +357,7 @@ window.addEventListener('DOMContentLoaded', () => {
       body: JSON.stringify(otpPayload)
     }).then(res => res.json())
       .then(response => {
+        hideLoader();
         if (response.message === 'Authentication success') {
          resetPaymentForm();
           // document.getElementById('paidAmount').textContent = '$' + totalAmount;
@@ -391,16 +409,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 }, 5000);
               } else {
+                hideLoader();
                 showToast('Step-up OOB initiation failed.', 'error');
               }
             })
             .catch(err => {
+              hideLoader();
               console.error('Step-up OOB Error:', err);
               showToast('Step-up OOB request failed.', 'error');
             });
 
         }
         else {
+          hideLoader();
           showToast(response.message, 'error');
         }
       })
