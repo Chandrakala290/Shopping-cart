@@ -253,7 +253,7 @@ window.addEventListener('DOMContentLoaded', () => {
               }
             });
 
-          }, 5000);
+          }, 15000);
 
         }
       }).catch(err => {
@@ -290,7 +290,7 @@ window.addEventListener('DOMContentLoaded', () => {
          resetPaymentForm();
           resolve(true); // ✅ resolve success
         } else {
-          showToast(res.message, 'error');
+          // showToast(res.message, 'error');
           resolve(false); // ❌ resolve failure
         }
       }).catch(() => {
