@@ -190,7 +190,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     };
     console.log(payload);
-     const apiUrl = "https://acurazi.sandbox.appsteer.io/services/mobile/external/triggerAPI/087145b7-f8d7-44eb-aff9-668fce83bec1"
+     const apiUrl = "https://frm-demo.appsteer.io/services/mobile/external/triggerAPI/087145b7-f8d7-44eb-aff9-668fce83bec1"
     fetch(apiUrl, {
       method: 'PUT',
       headers: {
@@ -347,7 +347,7 @@ window.addEventListener('DOMContentLoaded', () => {
             stepupAuthType: 'OOB'
           };
         
-          fetch('https://acurazi.sandbox.appsteer.io/services/mobile/external/triggerAPI/087145b7-f8d7-44eb-aff9-668fce83bec1', {
+          fetch('https://frm-demo.appsteer.io/services/mobile/external/triggerAPI/087145b7-f8d7-44eb-aff9-668fce83bec1', {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
