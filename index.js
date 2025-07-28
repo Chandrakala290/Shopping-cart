@@ -90,6 +90,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   }
   window.continueShopping = function () {
+   resetPaymentForm();
   document.getElementById('storeSelectionPage').classList.remove('hidden');
   document.getElementById('shopSection').classList.add('hidden');
   document.getElementById('paymentSection').classList.add('hidden');
@@ -108,6 +109,13 @@ window.addEventListener('DOMContentLoaded', () => {
   if (paidAmountEl) paidAmountEl.textContent = '$0.00';
 };
 
+ window.resetPaymentForm = function () {
+  const inputs = ['cardNumber', 'expiryDate', 'cvv', 'cardName', 'otpInput'];
+  inputs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+};
   window.mapRiskScore = function (score) {
     if (typeof score === 'string') {
       switch (score.toLowerCase()) {
@@ -214,6 +222,7 @@ window.addEventListener('DOMContentLoaded', () => {
           document.getElementById('oob-container').classList.add('hidden');
           document.getElementById('paidAmount').textContent = '$' + totalAmount;
           showToast('Authentication successful!', 'success');
+         resetPaymentForm();
         }
         else if (response.status === 'AR' && response.authType === 'OTP') {
           document.getElementById('storeSelectionPage').classList.add('hidden')
@@ -278,6 +287,7 @@ window.addEventListener('DOMContentLoaded', () => {
           document.getElementById('oob-container').classList.add('hidden');
           document.getElementById('paidAmount').textContent = '$' + totalAmount;
           showToast('Authentication successful!', 'success');
+         resetPaymentForm();
           resolve(true); // ✅ resolve success
         } else {
           showToast(res.message, 'error');
@@ -331,6 +341,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }).then(res => res.json())
       .then(response => {
         if (response.message === 'Authentication success') {
+         resetPaymentForm();
           // document.getElementById('paidAmount').textContent = '$' + totalAmount;
           document.getElementById('storeSelectionPage').classList.add('hidden')
           document.getElementById('shopSection').classList.add('hidden');
