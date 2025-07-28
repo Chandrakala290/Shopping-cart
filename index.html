@@ -622,7 +622,7 @@
    <div id="otpSection" class="hidden container">
     <h3>Enter OTP</h3>
     <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6" />
-      <div style="margin-top: 16px;">
+      <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
         <button  onclick="goToPayment()" style="
     margin-top: 20px;
     padding: 6px 12px;
@@ -650,6 +650,7 @@
         <span>Bank:</span>
         <strong>Mellat Bank</strong>
       </div> -->
+       <div style="text-align: center; margin-top: 20px;">
        <button onclick="continueShopping()" style="
     margin-top: 20px;
     padding: 10px 20px;
@@ -659,10 +660,12 @@
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
+    text-align: center;
   ">
     Continue Shopping
-  </button>
+  </button></div>
     </div>
+    
 
     <!-- Optional illustration -->
     <!-- <img src="success-image.png" alt="Success Illustration" class="illustration" /> -->
@@ -671,14 +674,16 @@
    <div class="message">
                             We've sent a verification message to your registered mobile. Kindly complete the verification to proceed
                         </div>
-    <button onclick="goToPayment()"style="
-    margin-top: 20px;
+   <div style="text-align: center; margin-top: 20px;">
+  <button onclick="goToPayment()" style="
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     font-size: 16px;
-    cursor: pointer;">Cancel
-    </button></div>
+    cursor: pointer;">
+    Cancel
+  </button>
+</div>/div>
     <div id="oob-failed" class="hidden container">
       <div class="message"  style="  color: #f11414;
 ">
