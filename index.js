@@ -355,10 +355,10 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
           document.getElementById('oob-container').classList.add('hidden');
                     document.getElementById('oob-failed').classList.add('hidden');
                     document.getElementById('failed-section').classList.remove('hidden')
-          showToast('Declined transaction done by ruleEngine', 'error')
+          // showToast('Declined transaction done by ruleEngine', 'error')
         }
         else if (response.status === 'RY') {
-           showToast('Payment initiated successfully!', 'success');
+           // showToast('Payment initiated successfully!', 'success');
           document.getElementById('storeSelectionPage').classList.add('hidden')
           document.getElementById('shopSection').classList.add('hidden');
           document.getElementById('paymentSection').classList.add('hidden');
@@ -372,10 +372,10 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
                     document.getElementById('oob-failed').classList.add('hidden');
 
           document.getElementById('paidAmount').textContent = '$' + totalAmount;
-          showToast('Authentication successful!', 'success');
+          // showToast('Authentication successful!', 'success');
         }
         else if (response.status === 'AR' && response.authType === 'OTP') {
-           showToast('Payment initiated successfully!', 'success');
+           // showToast('Payment initiated successfully!', 'success');
           document.getElementById('storeSelectionPage').classList.add('hidden')
           document.getElementById('shopSection').classList.add('hidden');
          document.getElementById('failed-section').classList.add('hidden')
@@ -388,10 +388,10 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
           document.getElementById('oob-container').classList.add('hidden');
                     document.getElementById('oob-failed').classList.add('hidden');
 
-          showToast('OTP sent successfully!', 'info');
+          // showToast('OTP sent successfully!', 'info');
         }
         else if (response.status === 'AR' && response.authType === 'OOB') {
-           showToast('Payment initiated successfully!', 'success');
+           // showToast('Payment initiated successfully!', 'success');
           document.getElementById('storeSelectionPage').classList.add('hidden')
           document.getElementById('shopSection').classList.add('hidden');
          document.getElementById('failed-section').classList.add('hidden')
@@ -465,7 +465,7 @@ document.getElementById('failed-section').classList.add('hidden')
           document.getElementById('success-section').classList.remove('hidden');
           document.getElementById('oob-container').classList.add('hidden');
           document.getElementById('paidAmount').textContent = '$' + totalAmount;
-          showToast('Authentication successful!', 'success');
+          // showToast('Authentication successful!', 'success');
           resetPaymentForm();
           resolve(true); // ✅ resolve success
         } else {
@@ -473,7 +473,7 @@ document.getElementById('failed-section').classList.add('hidden')
           resolve(false); // ❌ resolve failure
         }
       }).catch(() => {
-        showToast("OOB validation failed.", 'error');
+        // showToast("OOB validation failed.", 'error');
         resolve(false); // ❌ also resolve failure on error
       });
   });
@@ -534,7 +534,7 @@ document.getElementById('failed-section').classList.add('hidden')
           document.getElementById('success-section').classList.remove('hidden');
           document.getElementById('oob-container').classList.add('hidden');
           document.getElementById('paidAmount').textContent = '$' + totalAmount;
-          showToast('Authentication successful!', 'success');
+          // showToast('Authentication successful!', 'success');
           resetPaymentForm();
         }
         else if (response.status === 'SAR' && response.stepupAuthType === 'OOB') {
@@ -575,24 +575,24 @@ document.getElementById('failed-section').classList.add('hidden')
                       clearInterval(oobInterval); // Stop retrying on success
                     } else if (oobAttempts >= 3) {
                       clearInterval(oobInterval); // Stop after 3 attempts
-                      showToast('Step-up OOB authentication failed.', 'error');
+                      // showToast('Step-up OOB authentication failed.', 'error');
                     }
                   });
 
                 }, 5000);
               } else {
-                showToast('Step-up OOB initiation failed.', 'error');
+                // showToast('Step-up OOB initiation failed.', 'error');
               }
             })
             .catch(err => {
                hideLoader();
               console.error('Step-up OOB Error:', err);
-              showToast('Step-up OOB request failed.', 'error');
+              // showToast('Step-up OOB request failed.', 'error');
             });
 
         }
         else {
-          showToast(response.message, 'error');
+          // showToast(response.message, 'error');
         }
       })
   }
