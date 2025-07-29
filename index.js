@@ -339,6 +339,9 @@ totalAmount = amountMatch ? parseFloat(amountMatch[0]) : 0;
         tranId = response.tranId;
         authType = response.authType;
         if (response.status === 'RN') {
+          const rnMsg = document.getElementById('rn-message');
+  rnMsg.textContent = 'Declined transaction done by ruleEngine';
+  rnMsg.style.display = 'block';
           showToast('Declined transaction done by ruleEngine', 'error')
         }
         else if (response.status === 'RY') {
