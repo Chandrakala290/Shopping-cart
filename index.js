@@ -495,10 +495,10 @@ document.getElementById('failed-section').classList.add('hidden')
     }).then(data => data.json())
       .then(res => {
         if (res.message === 'Resend success') {
-          // showToast('Resend OTP successfully!', 'success');
+          showToast('Resend OTP successfully!', 'success');
         }
         else {
-          // showToast('Resend OTP failed!', 'error');
+          showToast('Resend OTP failed!', 'error');
         }
       })
   }
@@ -592,7 +592,7 @@ document.getElementById('failed-section').classList.add('hidden')
 
         }
         else {
-          // showToast(response.message, 'error');
+          showToast(response.message, 'error');
         }
       })
   }
