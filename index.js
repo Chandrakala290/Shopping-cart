@@ -574,7 +574,18 @@ document.getElementById('failed-section').classList.add('hidden')
                     if (success) {
                       clearInterval(oobInterval); // Stop retrying on success
                     } else if (oobAttempts >= 3) {
-                      clearInterval(oobInterval); // Stop after 3 attempts
+                      clearInterval(oobInterval);
+                      document.getElementById('oob-failed').classList.remove('hidden');
+                document.getElementById('storeSelectionPage').classList.add('hidden')
+          document.getElementById('shopSection').classList.add('hidden');
+              document.getElementById('device-info').classList.add('hidden');
+                            document.getElementById('riskscore-info').classList.add('hidden');
+
+          document.getElementById('paymentSection').classList.add('hidden');
+          document.getElementById('otpSection').classList.add('hidden');
+               document.getElementById('failed-section').classList.add('hidden')
+          document.getElementById('success-section').classList.add('hidden');
+          document.getElementById('oob-container').classList.add('hidden');// Stop after 3 attempts
                       // showToast('Step-up OOB authentication failed.', 'error');
                     }
                   });
